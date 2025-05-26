@@ -14,9 +14,6 @@ public class CurrencyController
 
     private void CreateCurrencies()
     {
-        var coinIcon = Resources.Load<Sprite>("Art/Icons/coin");
-        Debug.Log($"Coin icon loaded: {coinIcon != null}");
-
         _currencies.Add(new Currency("Coin", CurrencyType.Coin, Resources.Load<Sprite>("Art/Icons/coin")));
         _currencies.Add(new Currency("Gem", CurrencyType.Gem, Resources.Load<Sprite>("Art/Icons/gem")));
         _currencies.Add(new Currency("Food", CurrencyType.Food, Resources.Load<Sprite>("Art/Icons/food")));

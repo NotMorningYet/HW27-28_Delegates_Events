@@ -1,9 +1,9 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private WalletUI _walletUI;
+    [SerializeField] private WalletView _walletView;
     [SerializeField] private WalletActionsHandler _walletActionsHandler;
 
     private CurrencyController _currencyController;
@@ -11,10 +11,22 @@ public class GameManager : MonoBehaviour
     
     private void Awake()
     {
-        _wallet = new Wallet();
+        _wallet = new Wallet(CreateCurrencyStorage());
         _currencyController = new CurrencyController();
-        _walletUI.Initialize(_wallet, _currencyController);
+        _walletView.Initialize(_wallet, _currencyController);
         _walletActionsHandler.Initialize(_wallet);
         _walletActionsHandler.gameObject.SetActive(true);
+    }
+
+    private Dictionary<CurrencyType, int> CreateCurrencyStorage()
+    {
+        Dictionary<CurrencyType, int> storage = new Dictionary<CurrencyType, int>
+        {
+            { CurrencyType.Gem, 0 },
+            { CurrencyType.Coin, 0 },
+            { CurrencyType.Food, 0 }
+        };
+
+        return storage;
     }
 }

@@ -1103,7 +1103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c847dd385b63d4688f602108c90b7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _walletUI: {fileID: 1979863486}
+  _walletView: {fileID: 1979863486}
   _walletActionsHandler: {fileID: 642571015}
 --- !u!1 &832575517
 GameObject:
@@ -2909,7 +2909,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1979863483}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f178b84904d76584d953b6a2833e413b, type: 3}
+  m_Script: {fileID: 11500000, guid: adef1e6dcc0ce124c993964dffa8ea70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _currencyContainer: {fileID: 1979863484}

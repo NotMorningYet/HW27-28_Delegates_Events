@@ -4,44 +4,38 @@ using UnityEngine;
 
 public class Wallet : IWallet
 {
-    public event Action ValueChanged;
-    public event Action<Dictionary<CurrencyType, int>> WalletCreated;
+    public event Action<CurrencyType> ValueChanged;
 
-    private readonly Dictionary<CurrencyType, int> _storage = new();
+    private readonly Dictionary<CurrencyType, int> _storage;
 
-    public Wallet()
+    public Wallet(Dictionary<CurrencyType, int> storage)
     {        
-        WalletCreated?.Invoke(_storage);
+        _storage = storage;
     }
 
     public IReadOnlyDictionary<CurrencyType, int> Storage => _storage;
-
-    public void AddNewCurrency(CurrencyType type, int amount)
-    {
-        _storage.Add(type, amount);
-    }
 
     public void AddCurrency(CurrencyType type, int amount)
     {
         if (amount < 0)
         {
-            InvalidAmount();
+            ShowMessageInvalidAmount();
             return;
         }
 
         if (_storage.ContainsKey(type))
             _storage[type] += amount;
         else
-            AddNewCurrency(type, amount);
+            _storage.Add(type, amount);
 
-        ValueChanged?.Invoke();
+        ValueChanged?.Invoke(type);
     }
 
     public void RemoveCurrency(CurrencyType type, int amount)
     {
         if (amount < 0)
         {
-            InvalidAmount();
+            ShowMessageInvalidAmount();
             return;
         }
 
@@ -52,27 +46,31 @@ public class Wallet : IWallet
                 _storage[type] -= amount;
             }
             else
-                NotEnough(type);
+            {
+                ShowMessageNotEnough(type);
+            }
 
-            ValueChanged?.Invoke();
+            ValueChanged?.Invoke(type);
         }
-        else 
-            CurrencyTypeDoesNotExist(type);
+        else
+        {
+            ShowMessageCurrencyTypeDoesNotExist(type);
+        }
     }
 
     private bool IsEnough(CurrencyType type, int amount) => _storage[type] >= amount;
     
-    private void NotEnough(CurrencyType type)
+    private void ShowMessageNotEnough(CurrencyType type)
     {
         Debug.Log($"Недостаточно средств {type}");
     }
 
-    private void CurrencyTypeDoesNotExist(CurrencyType type)
+    private void ShowMessageCurrencyTypeDoesNotExist(CurrencyType type)
     {
         Debug.Log($"В кошельке отсутствует валюта {type}");
     }
 
-    private void InvalidAmount()
+    private void ShowMessageInvalidAmount()
     {
         Debug.Log("Значение валюты не может быть отрицательным");
     }
