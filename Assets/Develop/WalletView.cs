@@ -13,50 +13,14 @@ public class WalletView : MonoBehaviour
     public void Initialize(Wallet wallet)
     {
         _wallet = wallet;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
         _wallet.ValueChanged += OnCurrencyChanged;
 
         foreach (var currency in wallet.Storage)
         {
             CreateCurrencyView(currency.Key, currency.Value);
-=======
-        _currencyController = currencyController;        
-
-        foreach (var currency in wallet.Storage)
-        {
-            CreateCurrencyView(currency.Key, currency.Value.Value);
-            _wallet.SubscribeToCurrencyChange(currency.Key, (newValue) => OnCurrencyChanged(currency.Key, newValue));
->>>>>>> Stashed changes
-=======
-        _currencyController = currencyController;        
-
-        foreach (var currency in wallet.Storage)
-        {
-            CreateCurrencyView(currency.Key, currency.Value.Value);
-            _wallet.SubscribeToCurrencyChange(currency.Key, (newValue) => OnCurrencyChanged(currency.Key, newValue));
->>>>>>> Stashed changes
-=======
-        _currencyController = currencyController;        
-
-        foreach (var currency in wallet.Storage)
-        {
-            CreateCurrencyView(currency.Key, currency.Value.Value);
-            _wallet.SubscribeToCurrencyChange(currency.Key, (newValue) => OnCurrencyChanged(currency.Key, newValue));
->>>>>>> Stashed changes
-=======
-        _currencyController = currencyController;        
-
-        foreach (var currency in wallet.Storage)
-        {
-            CreateCurrencyView(currency.Key, currency.Value.Value);
-            _wallet.SubscribeToCurrencyChange(currency.Key, (newValue) => OnCurrencyChanged(currency.Key, newValue));
->>>>>>> Stashed changes
         }
     }
-
     private void CreateCurrencyView(CurrencyType type, int amount)
     {
         if (_currencyViews.ContainsKey(type))
@@ -70,10 +34,6 @@ public class WalletView : MonoBehaviour
         _currencyViews.Add(type, currencyView);
     }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     private CurrencyViewConfig GetConfigByType(CurrencyType type)
     {
         foreach (var config in _currencyConfigs)
@@ -84,36 +44,15 @@ public class WalletView : MonoBehaviour
         return null;
     }
 
-    private void OnCurrencyChanged(CurrencyType changedCurrencyType)
-=======
-    private void OnCurrencyChanged(CurrencyType changedCurrencyType, int newValue)
->>>>>>> Stashed changes
+    private void OnCurrencyChanged(CurrencyType changedCurrencyType, int newAmount)
     {
         if (_currencyViews.TryGetValue(changedCurrencyType, out var currencyView))
         {
-=======
-    private void OnCurrencyChanged(CurrencyType changedCurrencyType, int newValue)
-    {
-        if (_currencyViews.TryGetValue(changedCurrencyType, out var currencyView))
-        {
->>>>>>> Stashed changes
-=======
-    private void OnCurrencyChanged(CurrencyType changedCurrencyType, int newValue)
-    {
-        if (_currencyViews.TryGetValue(changedCurrencyType, out var currencyView))
-        {
->>>>>>> Stashed changes
-=======
-    private void OnCurrencyChanged(CurrencyType changedCurrencyType, int newValue)
-    {
-        if (_currencyViews.TryGetValue(changedCurrencyType, out var currencyView))
-        {
->>>>>>> Stashed changes
-            currencyView.UpdateAmount(newValue);
+            currencyView.UpdateAmount(newAmount);
         }
         else
         {
-            CreateCurrencyView(changedCurrencyType, newValue);
+            CreateCurrencyView(changedCurrencyType, newAmount);
         }
     }
 
