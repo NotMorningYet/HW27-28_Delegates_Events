@@ -14,11 +14,20 @@ public class WalletView : MonoBehaviour
     {
         _wallet = wallet;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         _wallet.ValueChanged += OnCurrencyChanged;
 
         foreach (var currency in wallet.Storage)
         {
             CreateCurrencyView(currency.Key, currency.Value);
+=======
+        _currencyController = currencyController;        
+
+        foreach (var currency in wallet.Storage)
+        {
+            CreateCurrencyView(currency.Key, currency.Value.Value);
+            _wallet.SubscribeToCurrencyChange(currency.Key, (newValue) => OnCurrencyChanged(currency.Key, newValue));
+>>>>>>> Stashed changes
 =======
         _currencyController = currencyController;        
 
@@ -44,6 +53,7 @@ public class WalletView : MonoBehaviour
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     private CurrencyViewConfig GetConfigByType(CurrencyType type)
     {
         foreach (var config in _currencyConfigs)
@@ -61,6 +71,12 @@ public class WalletView : MonoBehaviour
     {
         if (_currencyViews.TryGetValue(changedCurrencyType, out var currencyView))
         {
+=======
+    private void OnCurrencyChanged(CurrencyType changedCurrencyType, int newValue)
+    {
+        if (_currencyViews.TryGetValue(changedCurrencyType, out var currencyView))
+        {
+>>>>>>> Stashed changes
             currencyView.UpdateAmount(newValue);
         }
         else
