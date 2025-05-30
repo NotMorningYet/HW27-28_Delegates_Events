@@ -2916,9 +2916,9 @@ MonoBehaviour:
   _currencyPrefab: {fileID: 5668759985874820282, guid: 471a5c5a8aa3eb14783055c016590c5b,
     type: 3}
   _currencyConfigs:
-  - {fileID: 11400000, guid: 1067541cb8509b54fb19db098aaa3964, type: 2}
-  - {fileID: 11400000, guid: 2c0f1b50417d4a347b612c96f58a8693, type: 2}
   - {fileID: 11400000, guid: 0cc4a6d693eb2bf4c915e9d761dfbecf, type: 2}
+  - {fileID: 11400000, guid: 2c0f1b50417d4a347b612c96f58a8693, type: 2}
+  - {fileID: 11400000, guid: 1067541cb8509b54fb19db098aaa3964, type: 2}
 --- !u!114 &1979863487
 MonoBehaviour:
   m_ObjectHideFlags: 0

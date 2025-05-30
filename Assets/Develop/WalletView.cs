@@ -14,13 +14,27 @@ public class WalletView : MonoBehaviour
     {
         _wallet = wallet;
 
-        _wallet.ValueChanged += OnCurrencyChanged;
-
         foreach (var currency in wallet.Storage)
         {
-            CreateCurrencyView(currency.Key, currency.Value);
+            SubscribeToWallet(currency.Key, currency.Value);
+            CreateCurrencyView(currency.Key, currency.Value.Value);
         }
     }
+
+    private void SubscribeToWallet(CurrencyType type, ReactiveVariable<int> value)
+    {
+        value.Changed += (newValue) => OnCurrencyChanged(type, newValue);
+    }
+
+    private void UnsubscribeFromWallet()
+    {
+        foreach (var currency in _wallet.Storage)
+        {
+            var reactiveVar = currency.Value;
+            reactiveVar.Changed -= (newValue) => OnCurrencyChanged(currency.Key, newValue);
+        }
+    }
+
     private void CreateCurrencyView(CurrencyType type, int amount)
     {
         if (_currencyViews.ContainsKey(type))
@@ -58,16 +72,7 @@ public class WalletView : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (_wallet != null)
-        {
-            foreach (var currency in _wallet.Storage)
-            {
-                if (currency.Value != null)
-                {
-                    _wallet.UnsubscribeFromCurrencyChange(currency.Key, (newValue) => OnCurrencyChanged(currency.Key, newValue));
-                }
-            }
-        }
+        UnsubscribeFromWallet();
     }
 }
 
