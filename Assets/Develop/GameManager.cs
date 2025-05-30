@@ -6,14 +6,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private WalletView _walletView;
     [SerializeField] private WalletActionsHandler _walletActionsHandler;
 
-    private CurrencyController _currencyController;
     private Wallet _wallet;
     
     private void Awake()
     {
         _wallet = new Wallet(CreateCurrencyStorage());
-        _currencyController = new CurrencyController();
-        _walletView.Initialize(_wallet, _currencyController);
+        _walletView.Initialize(_wallet);
         _walletActionsHandler.Initialize(_wallet);
         _walletActionsHandler.gameObject.SetActive(true);
     }

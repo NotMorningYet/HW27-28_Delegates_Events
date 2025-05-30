@@ -5,23 +5,19 @@ public class WalletView : MonoBehaviour
 {
     [SerializeField] private Transform _currencyContainer;
     [SerializeField] private CurrencyView _currencyPrefab;
-
-    private CurrencyController _currencyController;
+    [SerializeField] private CurrencyViewConfig[] _currencyConfigs;
 
     private Wallet _wallet;
     private Dictionary<CurrencyType, CurrencyView> _currencyViews = new Dictionary<CurrencyType, CurrencyView>();
 
-    public void Initialize(Wallet wallet, CurrencyController currencyController)
+    public void Initialize(Wallet wallet)
     {
         _wallet = wallet;
-        _currencyController = currencyController;
-
         _wallet.ValueChanged += OnCurrencyChanged;
 
         foreach (var currency in wallet.Storage)
         {
             CreateCurrencyView(currency.Key, currency.Value);
-            OnCurrencyChanged(currency.Key);
         }
     }
 
@@ -30,11 +26,22 @@ public class WalletView : MonoBehaviour
         if (_currencyViews.ContainsKey(type))
             return;
 
-        CurrencyView currency = Instantiate(_currencyPrefab, _currencyContainer);
-        var currencyView = currency.GetComponent<CurrencyView>();
-        currencyView.Initialize(type.ToString(), amount, _currencyController.GetCurrencyByType(type).Icon);
+        var config = GetConfigByType(type);
+        if (config == null) return;
 
+        CurrencyView currencyView = Instantiate(_currencyPrefab, _currencyContainer);
+        currencyView.Initialize(config.Title, amount, config.Icon);
         _currencyViews.Add(type, currencyView);
+    }
+
+    private CurrencyViewConfig GetConfigByType(CurrencyType type)
+    {
+        foreach (var config in _currencyConfigs)
+        {
+            if (config.Type == type)
+                return config;
+        }
+        return null;
     }
 
     private void OnCurrencyChanged(CurrencyType changedCurrencyType)
