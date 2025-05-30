@@ -4,16 +4,14 @@ using UnityEngine;
 
 public class Wallet : IWallet
 {
-    public event Action<CurrencyType> ValueChanged;
+    private readonly Dictionary<CurrencyType, ReactiveVariable<int>> _storage;
 
-    private readonly Dictionary<CurrencyType, int> _storage;
-
-    public Wallet(Dictionary<CurrencyType, int> storage)
+    public Wallet(Dictionary<CurrencyType, ReactiveVariable<int>> storage)
     {        
         _storage = storage;
     }
 
-    public IReadOnlyDictionary<CurrencyType, int> Storage => _storage;
+    public IReadOnlyDictionary<CurrencyType, ReactiveVariable<int>> Storage => _storage;
 
     public void AddCurrency(CurrencyType type, int amount)
     {
@@ -24,11 +22,9 @@ public class Wallet : IWallet
         }
 
         if (_storage.ContainsKey(type))
-            _storage[type] += amount;
+            _storage[type].Value += amount;
         else
-            _storage.Add(type, amount);
-
-        ValueChanged?.Invoke(type);
+            _storage.Add(type, new ReactiveVariable<int>(amount));                
     }
 
     public void RemoveCurrency(CurrencyType type, int amount)
@@ -43,14 +39,12 @@ public class Wallet : IWallet
         {
             if (IsEnough(type, amount))
             {
-                _storage[type] -= amount;
+                _storage[type].Value -= amount;
             }
             else
             {
                 ShowMessageNotEnough(type);
             }
-
-            ValueChanged?.Invoke(type);
         }
         else
         {
@@ -58,7 +52,23 @@ public class Wallet : IWallet
         }
     }
 
-    private bool IsEnough(CurrencyType type, int amount) => _storage[type] >= amount;
+    public void SubscribeToCurrencyChange(CurrencyType type, Action<int> callback)
+    {
+        if (_storage.TryGetValue(type, out var reactiveVariable))
+        {
+            reactiveVariable.Changed += callback;
+        }
+    }
+
+    public void UnsubscribeFromCurrencyChange(CurrencyType type, Action<int> callback)
+    {
+        if (_storage.TryGetValue(type, out var reactiveVariable))
+        {
+            reactiveVariable.Changed -= callback;
+        }
+    }
+
+    private bool IsEnough(CurrencyType type, int amount) => _storage[type].Value >= amount;
     
     private void ShowMessageNotEnough(CurrencyType type)
     {

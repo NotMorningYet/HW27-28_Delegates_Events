@@ -16,13 +16,13 @@ public class GameManager : MonoBehaviour
         _walletActionsHandler.gameObject.SetActive(true);
     }
 
-    private Dictionary<CurrencyType, int> CreateCurrencyStorage()
+    private Dictionary<CurrencyType, ReactiveVariable<int>> CreateCurrencyStorage()
     {
-        Dictionary<CurrencyType, int> storage = new Dictionary<CurrencyType, int>
+        Dictionary<CurrencyType, ReactiveVariable<int>> storage = new Dictionary<CurrencyType, ReactiveVariable<int>>
         {
-            { CurrencyType.Gem, 0 },
-            { CurrencyType.Coin, 0 },
-            { CurrencyType.Food, 0 }
+            { CurrencyType.Gem, new ReactiveVariable<int>(0) },
+            { CurrencyType.Coin, new ReactiveVariable<int>(0) },
+            { CurrencyType.Food, new ReactiveVariable <int>(0) }
         };
 
         return storage;

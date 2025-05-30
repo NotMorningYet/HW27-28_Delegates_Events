@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 
 public interface IReadOnlyWallet
 {
-    IReadOnlyDictionary<CurrencyType, int> Storage { get; }
-    event Action<CurrencyType> ValueChanged;
+    IReadOnlyDictionary<CurrencyType, ReactiveVariable<int>> Storage { get; }
 }

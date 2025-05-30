@@ -13,11 +13,20 @@ public class WalletView : MonoBehaviour
     public void Initialize(Wallet wallet)
     {
         _wallet = wallet;
+<<<<<<< Updated upstream
         _wallet.ValueChanged += OnCurrencyChanged;
 
         foreach (var currency in wallet.Storage)
         {
             CreateCurrencyView(currency.Key, currency.Value);
+=======
+        _currencyController = currencyController;        
+
+        foreach (var currency in wallet.Storage)
+        {
+            CreateCurrencyView(currency.Key, currency.Value.Value);
+            _wallet.SubscribeToCurrencyChange(currency.Key, (newValue) => OnCurrencyChanged(currency.Key, newValue));
+>>>>>>> Stashed changes
         }
     }
 
@@ -34,6 +43,7 @@ public class WalletView : MonoBehaviour
         _currencyViews.Add(type, currencyView);
     }
 
+<<<<<<< Updated upstream
     private CurrencyViewConfig GetConfigByType(CurrencyType type)
     {
         foreach (var config in _currencyConfigs)
@@ -45,18 +55,17 @@ public class WalletView : MonoBehaviour
     }
 
     private void OnCurrencyChanged(CurrencyType changedCurrencyType)
+=======
+    private void OnCurrencyChanged(CurrencyType changedCurrencyType, int newValue)
+>>>>>>> Stashed changes
     {
-
-        if (_wallet.Storage.TryGetValue(changedCurrencyType, out var newAmount))
+        if (_currencyViews.TryGetValue(changedCurrencyType, out var currencyView))
         {
-            if (_currencyViews.TryGetValue(changedCurrencyType, out var currencyView))
-            {
-                currencyView.UpdateAmount(newAmount);
-            }
-            else
-            {
-                CreateCurrencyView(changedCurrencyType, newAmount);
-            }
+            currencyView.UpdateAmount(newValue);
+        }
+        else
+        {
+            CreateCurrencyView(changedCurrencyType, newValue);
         }
     }
 
@@ -64,7 +73,13 @@ public class WalletView : MonoBehaviour
     {
         if (_wallet != null)
         {
-            _wallet.ValueChanged -= OnCurrencyChanged;
+            foreach (var currency in _wallet.Storage)
+            {
+                if (currency.Value != null)
+                {
+                    _wallet.UnsubscribeFromCurrencyChange(currency.Key, (newValue) => OnCurrencyChanged(currency.Key, newValue));
+                }
+            }
         }
     }
 }
