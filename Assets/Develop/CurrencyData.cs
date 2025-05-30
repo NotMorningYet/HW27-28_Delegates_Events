@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class Currency 
+public class CurrencyData 
 {
-    public Currency(string title, CurrencyType type, Sprite icon)
+    public CurrencyData(string title, CurrencyType type, Sprite icon)
     {
         Title = title;
         Type = type;
@@ -11,6 +11,5 @@ public class Currency
 
     public string Title { get; }
     public CurrencyType Type { get; }
-    public Sprite Icon { get; }
-       
+    public Sprite Icon { get; }       
 }

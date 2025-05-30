@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Wallet : IWallet
 {
-    public event Action<CurrencyType> ValueChanged;
+    public event Action<CurrencyType, int> ValueChanged;
 
     private readonly Dictionary<CurrencyType, int> _storage;
 
@@ -28,7 +28,7 @@ public class Wallet : IWallet
         else
             _storage.Add(type, amount);
 
-        ValueChanged?.Invoke(type);
+        ValueChanged?.Invoke(type, _storage[type]);
     }
 
     public void RemoveCurrency(CurrencyType type, int amount)
@@ -50,7 +50,7 @@ public class Wallet : IWallet
                 ShowMessageNotEnough(type);
             }
 
-            ValueChanged?.Invoke(type);
+            ValueChanged?.Invoke(type, _storage[type]);
         }
         else
         {
