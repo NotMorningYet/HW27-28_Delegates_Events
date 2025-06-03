@@ -70,6 +70,7 @@ public class WalletView : MonoBehaviour
         }
     }
 
+
     private void OnDestroy()
     {
         UnsubscribeFromWallet();
