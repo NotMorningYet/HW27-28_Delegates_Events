@@ -63,9 +63,7 @@ public class Wallet : IWallet
     public void UnsubscribeFromCurrencyChange(CurrencyType type, Action<int> callback)
     {
         if (_storage.TryGetValue(type, out var reactiveVariable))
-        {
             reactiveVariable.Changed -= callback;
-        }
     }
 
     private bool IsEnough(CurrencyType type, int amount) => _storage[type].Value >= amount;
