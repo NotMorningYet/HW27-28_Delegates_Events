@@ -1,17 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Wallet : IWallet
 {
-    private readonly Dictionary<CurrencyType, ReactiveVariable<int>> _storage;
+    private readonly Dictionary<CurrencyType, ReactiveVariable<int>> _storage = new();
 
-    public Wallet(Dictionary<CurrencyType, ReactiveVariable<int>> storage)
-    {        
-        _storage = storage;
-    }
-
-    public IReadOnlyDictionary<CurrencyType, ReactiveVariable<int>> Storage => _storage;
+    public IReadOnlyDictionary<CurrencyType, IReadOnlyReactiveVariable<int>> Storage =>
+        _storage.ToDictionary(pair => pair.Key, pair => (IReadOnlyReactiveVariable<int>)pair.Value);
 
     public void AddCurrency(CurrencyType type, int amount)
     {

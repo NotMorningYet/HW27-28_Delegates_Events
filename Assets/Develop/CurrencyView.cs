@@ -8,16 +8,43 @@ public class CurrencyView : MonoBehaviour
     [SerializeField] private TMP_Text _titleText;
     [SerializeField] private TMP_Text _amountText;
 
-    public void Initialize(string title, int amount, Sprite icon)
+    private CurrencyType _type;
+    private IReadOnlyReactiveVariable<int> _currencyAmount;
+
+    public void Initialize(CurrencyViewConfig config, IReadOnlyReactiveVariable<int> currencyAmount)
     {
-        _titleText.text = title;
-        _amountText.text = amount.ToString();
-        _icon.sprite = icon;
+        _type = config.Type;
+        _titleText.text = config.Title;
+        _icon.sprite = config.Icon;
+
+        SetupCurrency(currencyAmount);
     }
 
-    public void UpdateAmount(int newAmount)
+    public void SetupCurrency(IReadOnlyReactiveVariable<int> currencyAmount)
     {
-        _amountText.text = newAmount.ToString();
+        if (_currencyAmount != null)
+            _currencyAmount.Changed -= OnAmountChanged;
+
+        _currencyAmount = currencyAmount;
+        UpdateAmount(_currencyAmount.Value);
+
+        _currencyAmount.Changed += OnAmountChanged;
+    }
+
+    private void OnAmountChanged(int newAmount)
+    {
+        UpdateAmount(newAmount);
+    }
+
+    private void UpdateAmount(int amount)
+    {
+        _amountText.text = amount.ToString();
+    }
+
+    private void OnDestroy()
+    {
+        if (_currencyAmount != null)
+            _currencyAmount.Changed -= OnAmountChanged;
     }
 }
 

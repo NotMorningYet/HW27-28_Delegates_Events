@@ -7,45 +7,29 @@ public class WalletView : MonoBehaviour
     [SerializeField] private CurrencyView _currencyPrefab;
     [SerializeField] private CurrencyViewConfig[] _currencyConfigs;
 
-    private Wallet _wallet;
-    private Dictionary<CurrencyType, CurrencyView> _currencyViews = new Dictionary<CurrencyType, CurrencyView>();
+    private Dictionary<CurrencyType, CurrencyView> _currencyViews = new();
 
     public void Initialize(Wallet wallet)
     {
-        _wallet = wallet;
+        ClearExistingViews();
 
         foreach (var currency in wallet.Storage)
-        {
-            SubscribeToWallet(currency.Key, currency.Value);
-            CreateCurrencyView(currency.Key, currency.Value.Value);
-        }
+            CreateCurrencyView(currency.Key, currency.Value);
     }
 
-    private void SubscribeToWallet(CurrencyType type, ReactiveVariable<int> value)
+    private void CreateCurrencyView(CurrencyType type, IReadOnlyReactiveVariable<int> currencyAmount)
     {
-        value.Changed += (newValue) => OnCurrencyChanged(type, newValue);
-    }
-
-    private void UnsubscribeFromWallet()
-    {
-        foreach (var currency in _wallet.Storage)
-        {
-            var reactiveVar = currency.Value;
-            reactiveVar.Changed -= (newValue) => OnCurrencyChanged(currency.Key, newValue);
-        }
-    }
-
-    private void CreateCurrencyView(CurrencyType type, int amount)
-    {
-        if (_currencyViews.ContainsKey(type))
+        if (_currencyViews.ContainsKey(type)) 
             return;
 
-        var config = GetConfigByType(type);
-        if (config == null) return;
+        CurrencyViewConfig config = GetConfigByType(type);
 
-        CurrencyView currencyView = Instantiate(_currencyPrefab, _currencyContainer);
-        currencyView.Initialize(config.Title, amount, config.Icon);
-        _currencyViews.Add(type, currencyView);
+        if (config == null) 
+            return;
+
+        CurrencyView view = Instantiate(_currencyPrefab, _currencyContainer);
+        view.Initialize(config, currencyAmount);
+        _currencyViews.Add(type, view);
     }
 
     private CurrencyViewConfig GetConfigByType(CurrencyType type)
@@ -58,21 +42,17 @@ public class WalletView : MonoBehaviour
         return null;
     }
 
-    private void OnCurrencyChanged(CurrencyType changedCurrencyType, int newAmount)
+    private void ClearExistingViews()
     {
-        if (_currencyViews.TryGetValue(changedCurrencyType, out var currencyView))
-        {
-            currencyView.UpdateAmount(newAmount);
-        }
-        else
-        {
-            CreateCurrencyView(changedCurrencyType, newAmount);
-        }
+        foreach (CurrencyView view in _currencyViews.Values)
+            Destroy(view.gameObject);
+
+        _currencyViews.Clear();
     }
 
     private void OnDestroy()
     {
-        UnsubscribeFromWallet();
+        ClearExistingViews();
     }
 }
 

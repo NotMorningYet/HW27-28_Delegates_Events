@@ -10,21 +10,17 @@ public class GameManager : MonoBehaviour
     
     private void Awake()
     {
-        _wallet = new Wallet(CreateCurrencyStorage());
+        _wallet = new Wallet();
+        InitializeDefaultCurrencies();
         _walletView.Initialize(_wallet);
         _walletActionsHandler.Initialize(_wallet);
         _walletActionsHandler.gameObject.SetActive(true);
     }
 
-    private Dictionary<CurrencyType, ReactiveVariable<int>> CreateCurrencyStorage()
+    private void InitializeDefaultCurrencies()
     {
-        Dictionary<CurrencyType, ReactiveVariable<int>> storage = new Dictionary<CurrencyType, ReactiveVariable<int>>
-        {
-            { CurrencyType.Gem, new ReactiveVariable<int>(0) },
-            { CurrencyType.Coin, new ReactiveVariable<int>(0) },
-            { CurrencyType.Food, new ReactiveVariable <int>(0) }
-        };
-
-        return storage;
+        _wallet.AddCurrency(CurrencyType.Gem, 0);
+        _wallet.AddCurrency(CurrencyType.Coin, 0);
+        _wallet.AddCurrency(CurrencyType.Food, 0);
     }
 }
